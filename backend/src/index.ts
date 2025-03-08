@@ -41,7 +41,15 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: [
+      "https://team-sync-management-project.vercel.app",
+      "http://localhost:5173",
+    ],
+    credentials: true,
+  })
+);
 
 app.get(
   `/`,
