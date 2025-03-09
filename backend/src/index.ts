@@ -34,7 +34,7 @@ app.use(
     // secure: config.NODE_ENV === "production",
     secure: true,
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "none",
   })
 );
 
