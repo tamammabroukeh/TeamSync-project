@@ -24,30 +24,41 @@ const BASE_PATH = config.BASE_PATH;
 
 app.use(express.json());
 
-app.use(express.urlencoded({ extended: true }));
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://team-sync-management-project.vercel.app"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
-// app.use(
-//   session({
-//     name: "session",
-//     keys: [config.SESSION_SECRET],
-//     maxAge: 24 * 60 * 60 * 1000,
-//     // secure: config.NODE_ENV === "production",
-//     secure: true,
-//     httpOnly: true,
-//     sameSite: "none",
-//   })
-// );
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
     name: "session",
     keys: [config.SESSION_SECRET],
     maxAge: 24 * 60 * 60 * 1000,
-    secure: config.NODE_ENV === "production", 
+    // secure: config.NODE_ENV === "production",
+    secure: true,
     httpOnly: true,
-    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
+    sameSite: "none",
   })
 );
+
+// app.use(
+//   session({
+//     name: "session",
+//     keys: [config.SESSION_SECRET],
+//     maxAge: 24 * 60 * 60 * 1000,
+//     secure: config.NODE_ENV === "production",
+//     httpOnly: true,
+//     sameSite: config.NODE_ENV === "production" ? "none" : "lax",
+//   })
+// );
 
 app.use(passport.initialize());
 app.use(passport.session());
