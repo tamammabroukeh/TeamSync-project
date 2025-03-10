@@ -37,37 +37,20 @@ app.use(express.json());
 
 app.use(cors(corsOptions));
 
-// app.use(
-//   cors({
-//     origin: (origin, callback) => {
-//       const allowedOrigins = [
-//         "https://team-sync-management-project.vercel.app",
-//         "http://localhost:5173",
-//       ];
-//       if (!origin || allowedOrigins.includes(origin)) {
-//         callback(null, origin);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
-//   })
-// );
-
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://team-sync-management-project.vercel.app"
-    // [
-    //   // "https://team-sync-management-project.vercel.app",
-    //   "http://localhost:5173",
-    // ]
-  );
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   res.setHeader("Access-Control-Allow-Credentials", "true");
+//   res.setHeader(
+//     "Access-Control-Allow-Origin",
+//     "https://team-sync-management-project.vercel.app"
+//     // [
+//     //   // "https://team-sync-management-project.vercel.app",
+//     //   "http://localhost:5173",
+//     // ]
+//   );
+//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   next();
+// });
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -79,23 +62,14 @@ app.use(
     secure: config.NODE_ENV === "production",
     httpOnly: true,
     sameSite: config.NODE_ENV === "production" ? "none" : "lax",
+    domain: "https://team-sync-management-project.vercel.app",
   })
 );
+
 app.use((req, res, next) => {
   console.log("Session:", req.session);
   next();
 });
-
-// app.use(
-//   session({
-//     name: "session",
-//     keys: [config.SESSION_SECRET],
-//     maxAge: 24 * 60 * 60 * 1000,
-//     secure: config.NODE_ENV === "production",
-//     httpOnly: true,
-//     sameSite: config.NODE_ENV === "production" ? "none" : "lax",
-//   })
-// );
 
 app.use(passport.initialize());
 app.use(passport.session());
