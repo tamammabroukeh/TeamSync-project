@@ -18,17 +18,51 @@ import workspaceRoutes from "./routes/workspace.route";
 import memberRoutes from "./routes/member.route";
 import projectRoutes from "./routes/project.route";
 import taskRoutes from "./routes/task.route";
+import corsOptions from "./config/corsOptions";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
 
 app.use(express.json());
 
+// app.use(
+//   cors({
+//     origin: [
+//       "https://team-sync-management-project.vercel.app",
+//       "http://localhost:5173",
+//     ],
+//     credentials: true,
+//   })
+// );
+
+app.use(cors(corsOptions));
+
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       const allowedOrigins = [
+//         "https://team-sync-management-project.vercel.app",
+//         "http://localhost:5173",
+//       ];
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, origin);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//   })
+// );
+
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Origin",
     "https://team-sync-management-project.vercel.app"
+    // [
+    //   // "https://team-sync-management-project.vercel.app",
+    //   "http://localhost:5173",
+    // ]
   );
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -47,6 +81,10 @@ app.use(
     sameSite: config.NODE_ENV === "production" ? "none" : "lax",
   })
 );
+app.use((req, res, next) => {
+  console.log("Session:", req.session);
+  next();
+});
 
 // app.use(
 //   session({
@@ -61,16 +99,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.use(
-  cors({
-    origin: [
-      "https://team-sync-management-project.vercel.app",
-      "http://localhost:5173",
-    ],
-    credentials: true,
-  })
-);
 
 app.get(
   `/`,
