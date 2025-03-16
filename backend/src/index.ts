@@ -22,18 +22,8 @@ import corsOptions from "./config/corsOptions";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
-
+let PRODUCTION = "production";
 app.use(express.json());
-
-// app.use(
-//   cors({
-//     origin: [
-//       "https://team-sync-management-project.vercel.app",
-//       "http://localhost:5173",
-//     ],
-//     credentials: true,
-//   })
-// );
 
 app.use(cors(corsOptions));
 
@@ -59,10 +49,10 @@ app.use(
     name: "session",
     keys: [config.SESSION_SECRET],
     maxAge: 24 * 60 * 60 * 1000,
-    secure: config.NODE_ENV === "production",
-    httpOnly: true,
-    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
-    domain: "https://team-sync-management-project.vercel.app",
+    secure: config.NODE_ENV === PRODUCTION,
+    httpOnly: config.NODE_ENV === PRODUCTION ? false : true,
+    sameSite: config.NODE_ENV === PRODUCTION ? "none" : "lax",
+    domain: config.FRONTEND_ORIGIN,
   })
 );
 
