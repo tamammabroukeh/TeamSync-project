@@ -36,8 +36,14 @@ export const loginMutationFn = async (
   }
 };
 
-export const registerMutationFn = async (data: registerType) =>
-  await API.post("/auth/register", data);
+export const registerMutationFn = async (data: registerType) => {
+  try {
+    const response = await API.post("/auth/register", data);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message || error.message);
+  }
+};
 
 export const logoutMutationFn = async () => await API.post("/auth/logout");
 

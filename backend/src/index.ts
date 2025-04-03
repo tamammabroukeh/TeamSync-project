@@ -50,9 +50,9 @@ app.use(
     keys: [config.SESSION_SECRET],
     maxAge: 24 * 60 * 60 * 1000,
     secure: config.NODE_ENV === PRODUCTION,
-    httpOnly: config.NODE_ENV === PRODUCTION ? false : true,
+    httpOnly: true,
     sameSite: config.NODE_ENV === PRODUCTION ? "none" : "lax",
-    domain: config.FRONTEND_ORIGIN,
+    // domain: config.FRONTEND_ORIGIN,
   })
 );
 
